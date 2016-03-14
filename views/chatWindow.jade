@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    div(class='panel panel-primary')
+        div(class='panel-heading')
+            h3= title
+        div(class='panel-body')
+            ul
+                each mes in messages
+                    li #{mes}
+
+            input(type='text' name='newMessage')
