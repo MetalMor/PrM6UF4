@@ -3,10 +3,18 @@ extends layout
 block content
     .panel.panel-primary
         .panel-heading
-            h3= reqdChannel.name
+            h3= 'Canal: ' + channel.name
         .panel-body
+            .label.label-info Missatges de la sala:
             ul
-                each mes in messages
-                    li #{mes}
+                unless !channel.messages
+                    each mes in channel.messages
+                        li #{mes}
 
-            input(type='text' name='newMessage')
+        .panel-footer
+            .row
+                label Usuari #{user.name} al canal #{channel.name}
+            .row
+                label Missatge:
+                input(type='text' name='newMessage')
+                input(type='submit' name='enviar')
