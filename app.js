@@ -11,7 +11,6 @@ var bodyParser = require('body-parser');
 
 /* ENRUTAMENT */
 var routes = require('./routes/index');
-var user = require('./routes/user');
 
 /* D'AQUI AL FINAL, COSES QUE EN PRINCIPI NO S'HAURIEN DE TOCAR
 (desiste tronco pq solo te lo cargaras todo xD) */
@@ -27,9 +26,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public/javascripts'));
 
 app.use('/', routes);
-app.use('/user', user);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

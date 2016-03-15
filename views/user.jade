@@ -1,4 +1,11 @@
 extends layout
 
 block content
-    p user
+      div(class='panel panel-info')
+        div(class='panel-heading')
+            h2 #{title}
+        div(class='panel-body')
+          form(name='userForm', method='post')
+              label Usuari:
+              input(type='text' name='name')
+              input(type='submit')
