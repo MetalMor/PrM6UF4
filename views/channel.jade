@@ -3,14 +3,14 @@ extends layout
 block content
     .panel.panel-primary
         .panel-heading
-            h2 #{title}
+            h2 #{title} - #{user.name}
         .panel-body
             form(method='get', action='chat')
                 label Canal:
-                input(type='text', name='channel')
+                input(type='text', name='newChannel')
                 if channels.length > 0
-                    select
+                    select(name='channel')
                         each chn in channels
-                            option(name='channel') #{chn.name}
+                            option #{chn.name}
                 br
                 input(type='submit')

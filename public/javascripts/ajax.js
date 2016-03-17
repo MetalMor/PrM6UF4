@@ -19,22 +19,26 @@ function inici() {
             }
         }
     }
-    document.getElementById("cadena").onkeyup = function() {
-        ajaxFunction(this.value);
+    document.getElementById("enviar").onclick = function() {
+        ajaxFunction(document.getElementById("newMessage").value);
     };
 }
 
-function ajaxFunction(cadena) {
+function ajaxFunction(message) {
+
+    var userData = JSON.parse(localStorage.getItem('userData'));
 
     //callback
     xhr.onreadystatechange = function() {
         if (xhr.readyState == 4) {
-            document.getElementById("cadenaInvertida").innerHTML = xhr.responseText;
+            userData.newMessage = message;
+            //document.getElementById("cadenaInvertida").innerHTML = xhr.responseText;
         }
     };
 
-    xhr.open("GET", "invertir?cadena=" + cadena, true);
-    xhr.send(null);
+    xhr.open("POST", "chat", true);
+    xhr.setRequestHeader("Content-Type", "application/json")
+    xhr.send(JSON.stringify(userData));
 }
 
 

@@ -11,7 +11,7 @@ var User = function(n) {
 };
 // Constructor de canales
 var Channel = function(n, frstMes) {
-    this.name = n;
+    this.name = globals.cleanChannelName(n);
     this.users = [];
     this.messages = [];
     this.messages.push(frstMes);
@@ -33,14 +33,29 @@ globals.findWithAttr = function(array, attr, value) {
 };
 
 // En un array, selecciona el primer elemento que exista (para seleccionar el campo del que viene el nombre del canal)
-globals.selectChannelName = function(names) {
-    if(names.hasOwnProperty('forEach')) {
+globals.selectChannelName = function(req) {
+    console.log('channel: ' + req.query.channel +
+               'newChannel: ' + req.query.newChannel);
+    if(req.query.newChannel === '') {
+        if(req.query.channel === undefined) {
+            return 'DefaultChannel';
+        } else return req.query.channel;
+    }
+    return req.query.newChannel;
+    /*if(typeof names === 'array') {
         names.forEach(function(name) {
+            console.log('iteracio nom: ' + name);
             if(name) return name;
         });
         return 'DefaultChannel';
     }
-    return names;
+    console.log('nom: ' + names);
+    return names;*/
+};
+
+globals.cleanChannelName = function(name) {
+    name = name.toString();
+    return name.replace(/\W/g, '');
 };
 
 /* GET pantalla nuevo usuario. */
@@ -52,20 +67,21 @@ router.get('/', function(req, res, next) {
 
 /* POST pantalla escoger canal */
 router.post('/', function(req, res, next) {
-    console.log('pantalla channel')
-    globals.user = new User(req.query.name);
+    globals.user = new User(req.body.name);
+    console.log('user name: ' + globals.user.name)
     var render = {
         title: 'Escull canal',
-        channels: globals.channels
+        channels: globals.channels,
+        user: globals.user
     };
     res.render('channel', render);
 });
 
 /* GET pantalla chat */
 router.get('/chat/', function(req, res, next) {
-    console.log('finestra chat');
+    //console.log('array noms canal: ' + req.query.channel);
 
-    var newChannelName = globals.selectChannelName(req.query.channel); // selecciona el nombre del canal del array de parametros pasados del formulario
+    var newChannelName = globals.selectChannelName(req); // selecciona el nombre del canal del array de parametros pasados del formulario
     var reqdChannel = new Channel(newChannelName, 'canal creat: ' + newChannelName); // crea un nuevo objeto canal
 
     // COMPROBACION DEL CANAL: comprueba si ya existe, si no existe lo inserta en el array de canales
@@ -75,8 +91,9 @@ router.get('/chat/', function(req, res, next) {
         var reqdChannel = globals.channels[channelPos]; // recogelo del array
     } else {
         // Si el canal no existe...
-        var length = globals.channels.push(reqdChannel); // crea e inserta el canal en la lista
+        var length = globals.channels.push(reqdChannel); // inserta el canal en la lista
         var reqdChannel = globals.channels[length-1]; // selecciona el canal requerido
+        globals.channels[length-1].messages.push('nou usuari: ' + globals.user.name);
     }
 
     reqdChannel.users.push(globals.user); // añade al usuario como nuevo miembro del canal
@@ -90,6 +107,11 @@ router.get('/chat/', function(req, res, next) {
         user: globals.user
     };
     res.render('chatWindow', render);
+});
+
+router.post('/chat/', function(req, res, next) {
+    var userData = JSON.parse(request.body);
+    console.log(userData);
 });
 
 module.exports = router;

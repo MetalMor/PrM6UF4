@@ -13,8 +13,10 @@ block content
 
         .panel-footer
             .row
-                label Usuari #{user.name} al canal #{channel.name}
+                label(id='data') Usuari #{user.name} al canal #{channel.name}
             .row
                 label Missatge:
-                input(type='text' name='newMessage')
-                input(type='submit' name='enviar')
+                input(type='text', id='newMessage')
+                input(type='submit', id='enviar')
+    script(src='javascripts/ajax.js')
+    script(src='javascripts/storage.js')
