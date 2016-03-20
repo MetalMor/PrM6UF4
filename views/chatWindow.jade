@@ -1,22 +1,18 @@
-extends layout
+extends layoutScript
 
 block content
     .panel.panel-primary
         .panel-heading
-            h3= 'Canal: ' + channel.name
+            h3(id="channel")= 'Canal: ' + channel.name
         .panel-body
             .label.label-info Missatges de la sala:
-            ul
-                unless !channel.messages
-                    each mes in channel.messages
-                        li #{mes}
-
+            ul(id='messages', onload='loadMessages(messagesArray);')
+                each mes in channel.messages
+                    li #{mes}
         .panel-footer
             .row
                 label(id='data') Usuari #{user.name} al canal #{channel.name}
             .row
                 label Missatge:
                 input(type='text', id='newMessage')
-                input(type='submit', id='enviar')
-    script(src='javascripts/ajax.js')
-    script(src='javascripts/storage.js')
+                input(type='submit', onclick="ajaxSendMessage();", value='enviar')
