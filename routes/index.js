@@ -59,20 +59,24 @@ router.get('/chat/:user', function(req, res, next) {
     res.render('chatWindow', render);
 });
 
+/* POST guarda un mensaje de un usuario */
 router.post('/saveMessage/', function(req, res, next) {
+    console.log('canal (client): ' + req.body.channel);
     var channelPos = globals.findWithAttr(globals.channels, 'name', req.body.channel);
-    globals.channels[channelPos].messages.unshift(req.body.message);
+    console.log('canal (server): ' + globals.channels[channelPos].name);
+    console.log('channels: ' + channelPos);
+    globals.channels[channelPos].messages.push(req.body.message);
+    console.log(globals.channels[channelPos].messages.length);
+    //res.setHeader('Content-Type', 'application/json');
     req.send(200);
 });
 
+/* POST envia los mensajes del canal especificado a un usuario */
 router.post('/chatWindow/', function(req, res, next) {
-    console.log('hola chatwindow')
-    var data = JSON.parse(req.body.data);
     var channelPos = globals.findWithAttr(globals.channels, 'name', req.body.data.channel);
     var messages = globals.channels[channelPos].messages;
-    console.log(typeOf(messages));
-    res.contentType('json');
-    res.send({channelMessages: messages});
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({channelMessages: messages}));
 });
 
 module.exports = router;

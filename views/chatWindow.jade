@@ -6,9 +6,7 @@ block content
             h3(id="channel")= 'Canal: ' + channel.name
         .panel-body
             .label.label-info Missatges de la sala:
-            ul(id='messages', onload='loadMessages(messagesArray);')
-                each mes in channel.messages
-                    li #{mes}
+            ul(id='messages')
         .panel-footer
             .row
                 label(id='data') Usuari #{user.name} al canal #{channel.name}

@@ -1,9 +1,16 @@
 console.log('hola messages');
 
 util = {
+    removeMessages: function(node) {
+        while (node.firstChild) {
+            node.removeChild(node.firstChild);
+        }
+    },
     loadMessages: function(messages) {
+        var messageList = document.getElementById('messages');
+        this.removeMessages(messageList);
         messages.forEach(function(message) {
-            messageList.appendChild(createListNode(message));
+            messageList.appendChild(util.createListNode(message));
         });
     },
     createListNode: function(text) {
@@ -23,14 +30,17 @@ util = {
         var userName = document.getElementById("data").innerHTML.split(' ')[1];
         var channelName = document.getElementById("data").innerHTML.split(' ')[4];
         return {
-            user: userName,
-            channel: channelName,
-            messages: messagesArray
+            data: {
+                user: userName,
+                channel: channelName,
+                messages: messagesArray
+            }
         };
     }
 };
 window.onload = function() {
-    userData = util.getDataObject()
+    userData = util.getDataObject();
+    util.loadMessages(userData.data.messages)
     console.log('user data: ' + userData.user);
 };
 

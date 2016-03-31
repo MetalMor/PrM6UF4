@@ -8,6 +8,10 @@ module.exports = {
         this.name = n;
         this.users = [];
         this.messages = [];
+        this.addUser = function(user) {
+            this.users.push(user);
+            this.messages.push('nou usuari: ' + user.name);
+        };
         this.messages.push(frstMes);
     },
     // Array de canales del servidor

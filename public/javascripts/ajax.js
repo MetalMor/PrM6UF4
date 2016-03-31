@@ -19,6 +19,16 @@ var inici = function() {
         }
     }
 
+    xhr.onreadystatechange = function() {
+        if(xhr.readyState == 4) {
+            var messageList = JSON.parse(xhr.responseText).channelMessages;
+            if(messageList.length != userData.data.messages.length) {
+                userData.data.messages = messageList;
+                util.loadMessages(messageList);
+            }
+        }
+    };
+
     window.setInterval(() => {
         ajaxGetMessages();
     }, 1000);
@@ -26,29 +36,26 @@ var inici = function() {
 
 function ajaxSendMessage() {
     var text = document.getElementById("newMessage").value;
-    var name = userData.user.name;
-    xhr.open("POST", "/saveMessage/", true);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    var newMessage = userData.user + '> ' +  document.getElementById('newMessage').value;
-    xhr.send(JSON.stringify({message: newMessage, channel: userData.channel}));
+    if(text != '') {
+        var name = userData.data.user;
+        xhr.open("POST", "/saveMessage/", true);
+        xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+        var newMessage = userData.data.user + '> ' +  document.getElementById('newMessage').value;
+        var toSend = {message: newMessage, channel: userData.data.channel};
+        xhr.send(JSON.stringify(toSend));
+        document.getElementById("newMessage").value = '';
+    }
 };
 
 function ajaxGetMessages() {
 
-    xhr.onreadystatechange = function() {
-        if(xhr.readyState == 4) {
-            var messageList = JSON.parse(xhr.responseText);
-
-            //document.getElementById('messages').appendChild();
-        }
-    };
-
     userData = util.getDataObject();
 
     xhr.open("POST", "/chatWindow/", true);
-    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
     xhr.send(JSON.stringify(userData));
-}
+
+};
 
 
 window.addEventListener("load", inici, true);
